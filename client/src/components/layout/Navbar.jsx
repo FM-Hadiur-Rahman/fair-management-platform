@@ -42,10 +42,11 @@ export default function Navbar() {
 
       <div className="relative mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
         <Link to="/" className="group flex items-center gap-3">
-          <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 via-emerald-600 to-amber-500 text-white shadow-xl shadow-emerald-500/20">
-            <Sparkles size={23} />
-            <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full bg-amber-400" />
-          </div>
+          <img
+            src="/logo.png"
+            alt="BanglaFair Essen Logo"
+            className="h-14 w-14 rounded-2xl object-contain shadow-xl"
+          />
 
           <div>
             <p className="text-lg font-black leading-tight tracking-tight">
