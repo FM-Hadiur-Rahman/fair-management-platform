@@ -1,12 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import {
-  Menu,
-  X,
-  Sparkles,
-  LayoutDashboard,
-  LogOut,
-  UserRound,
-} from "lucide-react";
+import { Menu, X, LayoutDashboard, LogOut, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import Button from "../ui/Button";
@@ -22,6 +15,7 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
   const links = [
     { label: "Home", to: "/" },
     { label: "Stalls", to: "/stalls" },
@@ -32,31 +26,44 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
+      className={`sticky top-0 z-50 text-white transition-all duration-300 ${
         scrolled
           ? "border-b border-white/10 bg-slate-950/90 shadow-2xl backdrop-blur-xl"
           : "bg-slate-950"
-      } text-white`}
+      }`}
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(16,185,129,0.18),transparent_28%),radial-gradient(circle_at_85%_30%,rgba(245,158,11,0.18),transparent_28%)]" />
 
-      <div className="relative mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
-        <Link to="/" className="group flex items-center gap-3">
-          <img
-            src="/logo.png"
-            alt="BanglaFair Essen Logo"
-            className="h-14 w-14 rounded-2xl object-contain shadow-xl"
-          />
+      <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 lg:px-8">
+        <div className="flex min-w-0 items-center gap-3">
+          <Link to="/" onClick={() => setOpen(false)} className="shrink-0">
+            <img
+              src="/logo.png"
+              alt="BanglaMela Essen Logo"
+              className="h-12 w-12 rounded-2xl object-contain shadow-xl sm:h-14 sm:w-14"
+            />
+          </Link>
 
-          <div>
-            <p className="text-lg font-black leading-tight tracking-tight">
-              BanglaFair Essen
-            </p>
-            <p className="text-xs font-medium text-slate-400">
-              Bengali Culture Fair
-            </p>
+          <div className="min-w-0 leading-tight">
+            <Link to="/" onClick={() => setOpen(false)}>
+              <p className="truncate text-base font-black tracking-tight text-white sm:text-lg">
+                BanglaMela Essen
+              </p>
+            </Link>
+
+            <a
+              href="https://it.backpunkt-management.de/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-1 inline-flex items-center gap-1 text-[10px] font-black transition hover:opacity-80 sm:text-xs"
+            >
+              <span className="text-yellow-300">Powered by</span>
+              <span className="text-emerald-300 hover:underline">
+                Backpunkt IT Solutions
+              </span>
+            </a>
           </div>
-        </Link>
+        </div>
 
         <nav className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 p-1 backdrop-blur md:flex">
           {links.map((link) => (
@@ -105,39 +112,48 @@ export default function Navbar() {
         </div>
 
         <button
-          onClick={() => setOpen(!open)}
-          className="rounded-2xl border border-white/10 bg-white/10 p-3 text-white md:hidden"
+          type="button"
+          onClick={() => setOpen((prev) => !prev)}
+          className="relative z-50 shrink-0 rounded-2xl border border-white/10 bg-white/10 p-3 text-white md:hidden"
+          aria-label="Toggle menu"
         >
           {open ? <X /> : <Menu />}
         </button>
       </div>
 
       {open && (
-        <div className="border-t border-white/10 bg-slate-950 px-4 py-5 md:hidden">
+        <div className="relative z-50 border-t border-white/10 bg-slate-950 px-4 py-5 md:hidden">
           <div className="flex flex-col gap-3">
             {links.map((link) => (
-              <Link
+              <NavLink
                 key={link.to}
                 to={link.to}
                 onClick={() => setOpen(false)}
-                className="rounded-2xl bg-white/5 px-4 py-3 font-semibold text-slate-200"
+                className={({ isActive }) =>
+                  `rounded-2xl px-4 py-3 font-semibold transition ${
+                    isActive
+                      ? "bg-white text-slate-950"
+                      : "bg-white/5 text-slate-200 hover:bg-white/10"
+                  }`
+                }
               >
                 {link.label}
-              </Link>
+              </NavLink>
             ))}
 
             {user?.role === "admin" && (
-              <Link
+              <NavLink
                 to="/admin"
                 onClick={() => setOpen(false)}
                 className="rounded-2xl bg-emerald-500/10 px-4 py-3 font-bold text-emerald-300"
               >
                 Admin Dashboard
-              </Link>
+              </NavLink>
             )}
 
             {user ? (
               <button
+                type="button"
                 onClick={() => {
                   logout();
                   setOpen(false);
@@ -147,13 +163,13 @@ export default function Navbar() {
                 Logout
               </button>
             ) : (
-              <Link
+              <NavLink
                 to="/login"
                 onClick={() => setOpen(false)}
                 className="rounded-2xl bg-emerald-600 px-4 py-3 text-center font-bold text-white"
               >
                 Login
-              </Link>
+              </NavLink>
             )}
           </div>
         </div>
